@@ -14,7 +14,7 @@ def get_review_data(url):
         if review_span:
             review_text = review_span.get_text(strip=True)
             review_data.append(review_text)
-            print("Fuck") 
+            print("Review Found!") 
     print(f"Found {len(review_data)} reviews on {url}")
     return review_data
 
