@@ -9,10 +9,10 @@ also the 'print("fuck)' was there when it worked and im scared to remove it.
 (ik it doesnt do anything, but the one time i added it, it worked :D )
 
 to install it
-run: 'python3 -m pip install -r rec.txt' in the directory.
+run: ```python3 -m pip install -r rec.txt``` in the directory.
 
 then to run it:
-'python3 main.py'
+```python3 main.py```
 
 its really weird
 
