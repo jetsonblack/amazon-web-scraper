@@ -46,18 +46,25 @@ if __name__ == "__main__" :
 	 
 	sentiment_scores(str)
 	"""
-	print("hello")
-	print (num)
+	#print("hello")
+	#print (num)
 
-	i =0
-	df = pd.read_csv('amazon_review_scrape.csv',nrows =0)
 	
+	
+	
+
+	i = 0
+	for i in range(num-1):
+		df = pd.read_csv('amazon_review_scrape.csv',nrows =i)
+		print("score:")
+		sentiment_scores(df.to_string())
 	#won't look through all of df
-	for i in range(num):
-		df = pd.read_csv('amazon_review_scrape.csv', nrows =i)
-		i+=i
-	sentiment_scores(df)
-	print(df.to_string)
+"""
+	for index, row in df.iterrows():
+		print(row[1])
+		"""
+	
+		
 	
 
 		
