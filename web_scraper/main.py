@@ -1,9 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import vaderSentiment
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
+numReviews = 0
 def get_review_data(url):
-    # Extract reviews from a single page
+    # Extract review from a single page
     print(f"Scraping reviews from {url}")
     raw_html = requests.get(url, headers=HEADERS).text
     soup = BeautifulSoup(raw_html, 'html.parser')
@@ -47,10 +50,14 @@ HEADERS = {
 reviews = get_all_reviews(url)
 
 # Save reviews to a CSV file
-dataset = {'text-review': reviews}
+dataset = {' ': reviews}
 dataframe = pd.DataFrame(dataset)
 
 # Add a print statement to check the length of reviews before saving to CSV
 print(f"Total reviews: {len(reviews)}")
 
+numReviews = len(reviews)
+
+
 dataframe.to_csv('amazon_review_scrape.csv', index=False)
+
