@@ -48,4 +48,4 @@ print(f"Total reviews: {len(reviews)}")
 
 dataset = {'text-review': reviews}
 dataframe = pd.DataFrame(dataset)
-dataframe.to_csv('amazon_review_scrape.csv', mode='a', header=False, index=False) #writes and appends to the amazon_review_scrape.csv file
+dataframe.to_csv('amazon_review_scrape.csv', mode='a', header=False, index=True) #writes and appends to the amazon_review_scrape.csv file
