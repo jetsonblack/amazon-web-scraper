@@ -1,63 +1,51 @@
-import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from bs4 import BeautifulSoup
 import pandas as pd
-import vaderSentiment
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import time
+import os
+script_directory = os.path.dirname(os.path.abspath(__file__))
+CHROME_DRIVER_PATH = os.path.join(script_directory, 'chromedriver.exe')
 
-numReviews = 0
-def get_review_data(url):
-    # Extract review from a single page
+def get_review_data(url, driver): #gets review data via html scrape and search.
     print(f"Scraping reviews from {url}")
-    raw_html = requests.get(url, headers=HEADERS).text
+    driver.get(url)
+    time.sleep(2)
+
+    raw_html = driver.page_source
     soup = BeautifulSoup(raw_html, 'html.parser')
 
     review_data = []
-    for review_div in soup.find_all("div", class_="a-row a-spacing-small review-data"):
-        review_span = review_div.find("span", {"data-hook": "review-body"})
-        if review_span:
-            review_text = review_span.get_text(strip=True)
+    for review_span in soup.find_all("span", class_="a-size-base review-text review-text-content"):
+        review_text = review_span.get_text(strip=True)
+        if review_text:
             review_data.append(review_text)
-            print("Review Found!") 
+            print("Review Found!")
+
     print(f"Found {len(review_data)} reviews on {url}")
     return review_data
 
-def get_all_reviews(url):
+def get_all_reviews(url, driver):
     reviews = []
-
-    # Get the first page of reviews
-    first_page_reviews = get_review_data(url)
+    first_page_reviews = get_review_data(url, driver)
     reviews.extend(first_page_reviews)
-
-    # Extract reviews from subsequent pages
-    next_page_url = url + "&pageNumber=2"
-    while next_page_url:
-        more_reviews = get_review_data(next_page_url)
-
-        if more_reviews:
-            reviews.extend(more_reviews)
-            next_page_url = url + "&pageNumber=" + str(int(next_page_url.split("pageNumber=")[-1]) + 1)
-        else:
-            next_page_url = None
-
     return reviews
 
-url = "https://www.amazon.com/Apple-AirPods-Charging-Latest-Model/product-reviews/B07PXGQC1Q/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews"
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36',
-    'Accept-Language': 'en-US, en;q=0.5'
-}
+url = str(input("URL?:")) #prompt user for URL of amazon review page an example: https://www.amazon.com/Apple-AirPods-Charging-Latest-Model/product-reviews/B07PXGQC1Q/ref=cm_cr_arp_d_paging_btm_prev_9?ie=UTF8&pageNumber=9&reviewerType=avp_only_reviews&sortBy=recent#reviews-filter-bar
 
-reviews = get_all_reviews(url)
+chrome_options = ChromeOptions()
+chrome_options.add_argument('--headless')  # Run Chrome in headless mode (without opening a browser window)
+chrome_service = ChromeService(executable_path=CHROME_DRIVER_PATH)
 
-# Save reviews to a CSV file
-dataset = {' ': reviews}
-dataframe = pd.DataFrame(dataset)
+driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
-# Add a print statement to check the length of reviews before saving to CSV
+reviews = get_all_reviews(url, driver)
+
+driver.quit()
+
 print(f"Total reviews: {len(reviews)}")
 
-numReviews = len(reviews)
-
-
-dataframe.to_csv('amazon_review_scrape.csv', index=False)
-
+dataset = {'text-review': reviews}
+dataframe = pd.DataFrame(dataset)
+dataframe.to_csv('amazon_review_scrape.csv', mode='a', header=False, index=False) #writes and appends to the amazon_review_scrape.csv file
