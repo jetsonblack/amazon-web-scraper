@@ -59,5 +59,5 @@ print(f"Total reviews: {len(reviews)}")
 numReviews = len(reviews)
 
 
-dataframe.to_csv('amazon_review_scrape.csv', index=False)
+dataframe.to_csv('amazon_review_scrape.csv', index=True)
 
