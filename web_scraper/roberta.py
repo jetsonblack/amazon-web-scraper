@@ -15,7 +15,6 @@ def roberta(text):
 	model = AutoModelForSequenceClassification.from_pretrained(MODEL)
 	#model.save_pretrained(MODEL)
 	#text = "Covid cases are increasing fast!"
-	#text = preprocess(text)
 	encoded_input = tokenizer(text, return_tensors='pt',truncation= True, max_length=512)
 	output = model(**encoded_input)
 	scores = output[0][0].detach().numpy()
@@ -37,6 +36,7 @@ def roberta(text):
 		print(f"{i+1}) {l} {np.round(float(s), 4)}")
 
 #iterate model on each csv row
+
 df = pd.read_csv('amazon_review_scrape.csv')
 for num, row in df.iterrows():
 	print(row.to_string())

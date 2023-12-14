@@ -37,11 +37,15 @@ def sentiment_scores(sentence):
 
 # Driver code
 if __name__ == "__main__" :
+	sentiment_scores("It's not that bad")
+
+	"""
 	#iterate model on each csv row
 	df = pd.read_csv('amazon_review_scrape.csv')
 	for num, row in df.iterrows():
 		print(row.to_string())
 		sentiment_scores(row.to_string())
+		"""
 
 	#https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/
 
