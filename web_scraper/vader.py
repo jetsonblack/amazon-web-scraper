@@ -7,7 +7,9 @@ import main
 # function to print sentiments
 # of the sentence.
 
-num = main.numReviews
+df = pd.read_csv('output.csv',nrows =i)
+num = len(df)
+
 def sentiment_scores(sentence):
 
 	# Create a SentimentIntensityAnalyzer object.
@@ -41,13 +43,13 @@ def sentiment_scores(sentence):
 if __name__ == "__main__" :
 	"""
 	str = ""
-	df = pd.read_csv('amazon_review_scrape.csv', nrows =0)
+	df = pd.read_csv('output.csv', nrows =0)
 	str = df
 	 
 	sentiment_scores(str)
 	"""
 	#print("hello")
-	#print (num)
+	#print ()
 
 	
 	
@@ -55,7 +57,6 @@ if __name__ == "__main__" :
 
 	i = 0
 	for i in range(num-1):
-		df = pd.read_csv('amazon_review_scrape.csv',nrows =i)
 		print("score:")
 		sentiment_scores(df.to_string())
 	#won't look through all of df
